@@ -4,7 +4,7 @@
             <div class="node" :style="{ 'opacity': node.opacity }">
                 <span class="node-name" v-html="dual_name(node_index)"
                     :style="{ 'background-color': node.background }"></span>
-                <span class="node-value" v-html="dual_value(node)"></span>
+                <span class="node-value" :style="{ 'opacity': node.value_opacity }" v-html="dual_value(node)"></span>
                 <span class="key" v-pre>
                     <math v-pre>
                         <mo>, </mo>
@@ -125,6 +125,7 @@ export default {
         "height": { type: Number, default: 2000, },
         "size": { type: Number, default: 180, },
         "animate_duration": { type: Number, default: 0.2, },
+        "value_transition": { type: Number, default: 0.6, },  // transition happens in the middle
         "content_top": { type: Number, default: 0, },
         "mwpf_data": {
             type: Object,
@@ -154,7 +155,10 @@ export default {
         },
         dual_value(node) {
             return `<math v-pre>
-                <mi>y</mi>
+                <msub>
+                    <mi>y</mi>
+                    <mi>S</mi>
+                </msub>
                 <mo>=</mo>
                 <mfrac>
                     <mn>${node.dn}</mn>
@@ -175,6 +179,8 @@ export default {
             const snapshot = mwpf_data.snapshots[snapshot_idx][1]
             const current_snapshot_idx = Math.floor(this.snapshot_idx)
             const current_snapshot = mwpf_data.snapshots[current_snapshot_idx][1]
+            const round_snapshot_idx = Math.round(this.snapshot_idx)
+            const round_snapshot = mwpf_data.snapshots[round_snapshot_idx][1]
             const frac_index = this.snapshot_idx - Math.floor(this.snapshot_idx)
             const dual_nodes = []
             for (let [node_index, node] of snapshot.dual_nodes.entries()) {
@@ -186,12 +192,39 @@ export default {
                 }
                 const color = get_node_color(node_index)
                 const background = lerpColors(color, "white", 0.5)
-                dual_nodes.push({
+                // calculate value opacity
+                let current_node = null
+                if (node_index < current_snapshot.dual_nodes.length) {
+                    current_node = current_snapshot.dual_nodes[node_index]
+                } else {
+                    current_node = {
+                        d: 0
+                    }
+                }
+                let value_opacity = 1
+                if (current_node.d != node.d) {
+                    const frac_half = frac_index < 0.5 ? frac_index : 1 - frac_index
+                    if (frac_half >= 0.5 - this.value_transition / 2) {
+                        value_opacity = (0.5 - frac_half) / (this.value_transition / 2)
+                    }
+                }
+                const modified_node = {
                     ...node,
                     opacity,
+                    value_opacity,
                     color,
                     background,
-                })
+                }
+                // modify the node value
+                if (node_index >= round_snapshot.dual_nodes.length) {
+                    modified_node.dn = 0
+                    modified_node.dd = 1
+                } else {
+                    const round_node = round_snapshot.dual_nodes[node_index]
+                    modified_node.dn = round_node.dn
+                    modified_node.dd = round_node.dd
+                }
+                dual_nodes.push(modified_node)
             }
             return dual_nodes
         },

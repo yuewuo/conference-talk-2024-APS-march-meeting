@@ -175,7 +175,7 @@ export default {
             }
             const mwpf_data = this.mwpf_data
             let snapshot_idx = Math.floor(this.snapshot_idx) + 1
-            snapshot_idx = Math.min(snapshot_idx, this.mwpf_data.snapshots.length)
+            snapshot_idx = Math.min(snapshot_idx, this.mwpf_data.snapshots.length - 1)
             const snapshot = mwpf_data.snapshots[snapshot_idx][1]
             const current_snapshot_idx = Math.floor(this.snapshot_idx)
             const current_snapshot = mwpf_data.snapshots[current_snapshot_idx][1]

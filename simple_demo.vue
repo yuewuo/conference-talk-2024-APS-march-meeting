@@ -10,8 +10,9 @@
 import mwpf_3d from './common/mwpf_3d.vue'
 import mwpf_textbox from './common/mwpf_textbox.vue'
 
-const showing = 3
-const duration = 4
+const steps = 3
+const step_duration = 3
+const duration = (steps + 1) * step_duration
 
 export default {
     props: {
@@ -40,11 +41,12 @@ export default {
     computed: {
         snapshot_idx_interpolated() {
             let time = this.time
-            let end_index = 1
-            if (time < showing) {
-                return end_index * this.smooth_animate(time / showing)
+            if (time < steps * step_duration) {
+                const step_index = Math.floor(time / step_duration)
+                const step_internal = time / step_duration - step_index  // [0, 1)
+                return step_index + this.smooth_animate(step_internal)
             }
-            return end_index
+            return steps
         },
     },
     methods: {

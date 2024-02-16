@@ -10,8 +10,8 @@
 import mwpf_3d from './common/mwpf_3d.vue'
 import mwpf_textbox from './common/mwpf_textbox.vue'
 
-const showing = 3
-const duration = 3.5
+const showing = 6
+const duration = 6.5
 
 export default {
     props: {

@@ -125,7 +125,7 @@ export default {
         "height": { type: Number, default: 2000, },
         "size": { type: Number, default: 180, },
         "animate_duration": { type: Number, default: 0.2, },
-        "value_transition": { type: Number, default: 0.6, },  // transition happens in the middle
+        "value_transition": { type: Number, default: 0.8, },  // transition happens in the middle
         "content_top": { type: Number, default: 0, },
         "mwpf_data": {
             type: Object,

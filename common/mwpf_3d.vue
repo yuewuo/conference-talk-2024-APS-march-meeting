@@ -76,7 +76,7 @@ export const normal_vertex_outline_material = new THREE.MeshStandardMaterial({
 })
 export const edge_materials = []
 let empty_edge_color = new THREE.Color(0, 0, 0)
-let grown_edge_color = new THREE.Color(1, 0, 0)
+let grown_edge_color = new THREE.Color("#D52C1C")
 let empty_edge_opacity = 0.1
 let grown_edge_opacity = 1
 let almost_empty_ratio = 0.1
@@ -204,18 +204,18 @@ export default {
             default: mwpf_data_example,
         },
         "snapshot_idx": { type: Number, default: 0, },  // can be any fractional number, if so, the data is interpolated
-        "show_dual_region": { type: Boolean, default: true },
-        "variable_grown_edge_color": { type: Boolean, default: true },
+        "highlight_vertices": { type: Object, default: null },
+        "highlight_edges": { type: Object, default: null },
     },
     data() {
         return {
 
         }
     },
-    async mounted() {
+    mounted() {
         // create scene
         const scene = new THREE.Scene()
-        // scene.background = new THREE.Color( 0xffffff )  // for better image output
+        // scene.background = new THREE.Color(0xff00ff) // debug
         scene.add(new THREE.AmbientLight(0xffffff))
         const aspect_ratio = this.width / this.height
         const camera_scale = this.camera_scale
@@ -247,17 +247,24 @@ export default {
             orbit_control.update()
             renderer.render(scene, camera)
         }
-        animate()
         // meshes that can be reused across different snapshots
         this.variables = {
-            scene, orbit_control,
+            scene, renderer, orbit_control,
             vertex_meshes: [],
             vertex_outline_meshes: [],
             edge_vec_meshes: [],
         }
         // refresh data
         this.refresh_snapshot_data()
+        animate()
         console.log("mwpf 3d component mounted")
+    },
+    unmounted() {
+        const renderer = this.variables.renderer
+        if (renderer != null) {
+            renderer.dispose()
+            renderer.forceContextLoss()
+        }
     },
     computed: {
 
@@ -326,7 +333,7 @@ export default {
                 }
             }
         },
-        async refresh_snapshot_data() {
+        refresh_snapshot_data() {
             if (this.mwpf_data == null) {
                 return
             }
@@ -540,6 +547,46 @@ export default {
             }
             for (let i = snapshot.vertices.length; i < vertex_meshes.length; ++i) {
                 vertex_outline_meshes[i].visible = false
+            }
+            // draw highlights
+            if (this.highlight_vertices != null || this.highlight_edges != null) {
+                // record original material
+                const vertex_meshes_original = []
+                const vertex_outline_meshes_original = []
+                if (this.highlight_vertices != null) {
+                    for (let vertex_index of this.highlight_vertices) {
+                        vertex_meshes_original.push(vertex_meshes[vertex_index].material)
+                        vertex_outline_meshes_original.push(vertex_outline_meshes[vertex_index].material)
+                    }
+                }
+                // disable all
+                const hide_material = get_edge_material(0, 1)
+                for (let mesh of vertex_meshes) {
+                    mesh.material = hide_material
+                }
+                for (let mesh of vertex_outline_meshes) {
+                    mesh.material = hide_material
+                }
+                for (let meshes of edge_vec_meshes) {
+                    for (let mesh of meshes) {
+                        mesh.material = hide_material
+                    }
+                }
+                // recover highlighted material
+                if (this.highlight_vertices != null) {
+                    for (let [i, vertex_index] of this.highlight_vertices.entries()) {
+                        vertex_meshes[vertex_index].material = vertex_meshes_original[i]
+                        vertex_outline_meshes[vertex_index].material = vertex_outline_meshes_original[i]
+                    }
+                }
+                if (this.highlight_edges != null) {
+                    const highlight_material = get_edge_material(1, 1)
+                    for (let [i, edge_index] of this.highlight_edges.entries()) {
+                        for (let [j, mesh] of edge_vec_meshes[edge_index].entries()) {
+                            mesh.material = highlight_material
+                        }
+                    }
+                }
             }
         },
     },

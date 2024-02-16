@@ -1,7 +1,6 @@
 <template>
-    <Mwpf3d :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3"></Mwpf3d>
-    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="1.8" :content_top="500">
-    </MwpfTextBox>
+    <Mwpf3d :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="2.5"></Mwpf3d>
+    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="1.8"></MwpfTextBox>
 </template>
 
 <style></style>
@@ -11,7 +10,7 @@ import mwpf_3d from './common/mwpf_3d.vue'
 import mwpf_textbox from './common/mwpf_textbox.vue'
 
 const showing = 3
-const duration = 3.5
+const duration = 4
 
 export default {
     props: {
@@ -32,14 +31,15 @@ export default {
     async mounted() {
         this.$emit('duration-is', duration)
         // get decoding graph data
-        let response = await fetch('./common/aps2024_debug_demo.json', { cache: 'no-cache', })
+        let response = await fetch('./common/aps2024_simple_demo.json', { cache: 'no-cache', })
         this.mwpf_data = await response.json()
         console.log("main component mounted")
+        console.log("expected resolution: 4400 * 2000")
     },
     computed: {
         snapshot_idx_interpolated() {
             let time = this.time
-            let end_index = 6
+            let end_index = 1
             if (time < showing) {
                 return end_index * this.smooth_animate(time / showing)
             }
@@ -48,13 +48,12 @@ export default {
     },
     methods: {
         smooth_animate(ratio) {
-            // if (ratio < 0) ratio = 0
-            // if (ratio > 1) ratio = 1
-            return ratio
-            // if (ratio < 0.5) {
-            //     return 2 * ratio * ratio
-            // }
-            // return 1 - 2 * (1 - ratio) * (1 - ratio)
+            if (ratio < 0) ratio = 0
+            if (ratio > 1) ratio = 1
+            if (ratio < 0.5) {
+                return 2 * ratio * ratio
+            }
+            return 1 - 2 * (1 - ratio) * (1 - ratio)
         }
     },
     watch: {

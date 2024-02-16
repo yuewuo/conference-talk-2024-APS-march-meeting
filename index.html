@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Maker</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .control {
+            position: absolute;
+            font-size: 15px;
+            line-height: 16px;
+            top: 0;
+            left: 0;
+            background-color: grey;
+            opacity: 0.5;
+        }
+
+        .slider {
+            width: 350px;
+            height: 10px;
+            margin: 3px;
+        }
+
+        .control-button {
+            height: 15px;
+            line-height: 12px;
+            font-size: 12px;
+            padding: 2px;
+            border: 2px;
+            margin: 2px;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.139.2/build/three.module.js",
+                "./node_modules/three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/controls/OrbitControls.js",
+                "./node_modules/three/examples/jsm/geometries/ConvexGeometry.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/geometries/ConvexGeometry.js",
+                "./node_modules/three/examples/jsm/libs/stats.module.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/libs/stats.module.js",
+                "./node_modules/three/examples/jsm/libs/lil-gui.module.min.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/libs/lil-gui.module.min.js"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hull.js@1.0.2/dist/hull.js"></script>
+
+    <script src="./js/seedrandom.js"></script>
+    <!-- <script src="https://unpkg.com/vue@3"></script> -->
+    <script src="./js/vue.global.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script> -->
+    <script src="./js/vue3-sfc-loader.js"></script>
+
+    <div id="app"></div>
+
+
+    <script type="module" async>
+        import * as THREE from 'three'
+        window.THREE = THREE
+        import {OrbitControls} from './node_modules/three/examples/jsm/controls/OrbitControls.js'
+        window.OrbitControls = OrbitControls
+        import {ConvexGeometry} from './node_modules/three/examples/jsm/geometries/ConvexGeometry.js'
+        window.ConvexGeometry = ConvexGeometry
+
+        // use default mwpf data for debugging purpose
+        let response = await fetch('./common/aps2024_debug_demo.json', {cache: 'no-cache', })
+        const mwpf_data_example = await response.json()
+        window.mwpf_data_example = mwpf_data_example
+
+        const urlParams = new URLSearchParams(window.location.search)
+        const animation_name = urlParams.get("animation") || "independent_errors"
+        const scale = parseFloat(urlParams.get("scale") || "1")
+        var time = Vue.ref(parseFloat(urlParams.get("time") || "0"))
+        window.time = time
+        window.set_time = (new_time) => {
+            time.value = new_time
+            return new_time
+        }
+        window.get_time = () => {
+            return time.value
+        }
+        var show_control = Vue.ref(true)
+        window.hide_control = () => {
+            show_control.value = false
+        }
+        if (urlParams.get("hide_control") != null) {
+            window.hide_control()
+        }
+
+        const options = {
+            moduleCache: {
+                vue: Vue
+            },
+            async getFile(url) {
+                const res = await fetch(url);
+                if (!res.ok)
+                    throw Object.assign(new Error(res.statusText + ' ' + url), {res});
+                return {
+                    getContentData: asBinary => asBinary ? res.arrayBuffer() : res.text(),
+                }
+            },
+            addStyle(textContent) {
+                const style = Object.assign(document.createElement('style'), {textContent});
+                const ref = document.head.getElementsByTagName('style')[0] || null;
+                document.head.insertBefore(style, ref);
+            },
+        }
+
+        const {loadModule} = window['vue3-sfc-loader'];
+
+        const components = {}
+        components[animation_name] = Vue.defineAsyncComponent(() => loadModule(`./${animation_name}.vue`, options)),
+
+            Vue.createApp({
+                data() {
+                    return {
+                        time: time,
+                        duration: 1,
+                        playing: false,
+                        time_bias: null,
+                        show_control: show_control,
+                    }
+                },
+                mounted() {
+                    document.onkeydown = (event) => {
+                        if (!event.metaKey) {
+                            if (event.key == " ") {
+                                this.play_pause()
+                            } else {
+                                console.log(`unrecognized key ${event.key}, propagate to other listeners`)
+                                return
+                            }
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                    }
+                    requestAnimationFrame(this.animate)
+                },
+                methods: {
+                    animate() {
+                        if (this.playing) {
+                            let biased_time = (Date.now() / 1000 - this.time_bias) % this.duration
+                            this.time = parseInt(biased_time * 100) / 100
+                        }
+                        requestAnimationFrame(this.animate)
+                    },
+                    slider_set_time(event) {
+                        this.time = parseFloat(event.target.value)
+                    },
+                    play_pause() {
+                        if (!this.playing) {
+                            this.time_bias = Date.now() / 1000 - this.time
+                        }
+                        this.playing = !this.playing
+                    },
+                },
+                computed: {
+                    play_pause_color() {
+                        if (!this.playing) {
+                            return 'lightgrey'
+                        }
+                        return 'red'
+                    },
+                },
+                components: components,
+                template: `
+            <${animation_name} :scale="${scale}" :time="time" @duration-is="(d) => duration = d"></${animation_name}>
+            <div class="control" v-if="show_control">
+                <input class="slider" type="range" min="0" :max="duration" step="0.01" :value="time" @input="slider_set_time">
+                <button class="control-button" @click="play_pause" :style="{ 'background-color': play_pause_color }">⏯</button>
+                <span style="display: inline-block; min-width: 40px;">{{ time }}</span>
+                
+            </div>
+        `,
+            }).mount('#app')
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<template>
+    <Mwpf3d :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3"></Mwpf3d>
+    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3" :content_top="100">
+    </MwpfTextBox>
+</template>
+
+<style></style>
+
+<script>
+import mwpf_3d from './common/mwpf_3d.vue'
+import mwpf_textbox from './common/mwpf_textbox.vue'
+
+const steps = 5
+const step_duration = 3
+const duration = (steps + 1) * step_duration
+
+export default {
+    props: {
+        "scale": { type: Number, default: 1, },
+        "time": Number,
+        "d": { type: Number, default: 5, },
+    },
+    emits: ["duration-is"],
+    data() {
+        return {
+            mwpf_data: null,
+        }
+    },
+    components: {
+        Mwpf3d: mwpf_3d,
+        MwpfTextBox: mwpf_textbox,
+    },
+    async mounted() {
+        this.$emit('duration-is', duration)
+        // get decoding graph data
+        let response = await fetch('./common/aps2024_challenge_demo.json', { cache: 'no-cache', })
+        this.mwpf_data = await response.json()
+        console.log("main component mounted")
+        console.log("expected resolution: 4400 * 2000")
+    },
+    computed: {
+        snapshot_idx_interpolated() {
+            let time = this.time
+            if (time < steps * step_duration) {
+                const step_index = Math.floor(time / step_duration)
+                const step_internal = time / step_duration - step_index  // [0, 1)
+                return step_index + this.smooth_animate(step_internal)
+            }
+            return steps
+        },
+    },
+    methods: {
+        smooth_animate(ratio) {
+            if (ratio < 0) ratio = 0
+            if (ratio > 1) ratio = 1
+            if (ratio < 0.5) {
+                return 2 * ratio * ratio
+            }
+            return 1 - 2 * (1 - ratio) * (1 - ratio)
+        }
+    },
+    watch: {
+
+    },
+}
+</script>

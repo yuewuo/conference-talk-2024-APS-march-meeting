@@ -47,6 +47,7 @@
                 "three": "https://cdn.jsdelivr.net/npm/three@0.139.2/build/three.module.js",
                 "./node_modules/three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/controls/OrbitControls.js",
                 "./node_modules/three/examples/jsm/geometries/ConvexGeometry.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/geometries/ConvexGeometry.js",
+                "./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/utils/BufferGeometryUtils.js",
                 "./node_modules/three/examples/jsm/libs/stats.module.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/libs/stats.module.js",
                 "./node_modules/three/examples/jsm/libs/lil-gui.module.min.js": "https://cdn.jsdelivr.net/npm/three@0.139.2/examples/jsm/libs/lil-gui.module.min.js"
             }
@@ -71,6 +72,8 @@
         window.OrbitControls = OrbitControls
         import {ConvexGeometry} from './node_modules/three/examples/jsm/geometries/ConvexGeometry.js'
         window.ConvexGeometry = ConvexGeometry
+        import * as BufferGeometryUtils from './node_modules/three/examples/jsm/utils/BufferGeometryUtils.js'
+        window.BufferGeometryUtils = BufferGeometryUtils
 
         // use default mwpf data for debugging purpose
         let response = await fetch('./common/aps2024_debug_demo.json', {cache: 'no-cache', })

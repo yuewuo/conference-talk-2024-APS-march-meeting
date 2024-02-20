@@ -279,6 +279,9 @@ export default {
 
     },
     methods: {
+        get_func_get_edge_material() {
+            return get_edge_material
+        },
         get_interpolated_snapshot() {
             const mwpf_data = this.mwpf_data
             const snapshot_idx_1 = Math.floor(this.snapshot_idx)

@@ -13,7 +13,7 @@ HEIGHT = 1400
 URL = f"http://localhost:8099/index.html?animation={NAME}"
 FRAME_RATE = 60
 # FRAME_RATE = 5  # for debugging
-DURATION = 30
+DURATION = 45
 
 USE_EXISTING_IMAGES = False
 if 'USE_EXISTING_IMAGES' in os.environ and os.environ["USE_EXISTING_IMAGES"] != "":

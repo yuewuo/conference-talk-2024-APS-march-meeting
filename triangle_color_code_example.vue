@@ -17,7 +17,7 @@ import mwpf_3d from './common/mwpf_3d.vue'
 import mwpf_textbox from './common/mwpf_textbox.vue'
 
 const steps = 300
-const step_duration = 0.1
+const step_duration = 0.15
 const duration = (steps + 1) * step_duration
 
 export default {
@@ -43,9 +43,9 @@ export default {
     async mounted() {
         this.$emit('duration-is', duration)
         // get decoding graph data
-        this.mwpf_data_1 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.04.json', { cache: 'no-cache', })).json()
-        this.mwpf_data_2 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.02.json', { cache: 'no-cache', })).json()
-        this.mwpf_data_3 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.01.json', { cache: 'no-cache', })).json()
+        this.mwpf_data_1 = await this.get_data('./common/aps2024_triangle_color_code_example_p0.04.json')
+        this.mwpf_data_2 = await this.get_data('./common/aps2024_triangle_color_code_example_p0.02.json')
+        this.mwpf_data_3 = await this.get_data('./common/aps2024_triangle_color_code_example_p0.01.json')
         console.log("main component mounted")
         console.log("expected resolution: 4400 * 2000")
     },
@@ -62,6 +62,12 @@ export default {
         },
     },
     methods: {
+        async get_data(json_path) {
+            const response = await fetch(json_path, { cache: 'no-cache', })
+            const json_value = await response.json()
+            // return json_value
+            return remove_resolve_steps_from_mwpf_data(json_value)
+        },
         smooth_animate(ratio) {
             if (ratio < 0) ratio = 0
             if (ratio > 1) ratio = 1

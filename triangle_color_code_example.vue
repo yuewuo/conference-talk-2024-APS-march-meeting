@@ -43,9 +43,9 @@ export default {
     async mounted() {
         this.$emit('duration-is', duration)
         // get decoding graph data
-        this.mwpf_data_1 = await (await fetch('./common/aps2024_surface_code_example_p0.04.json', { cache: 'no-cache', })).json()
-        this.mwpf_data_2 = await (await fetch('./common/aps2024_surface_code_example_p0.02.json', { cache: 'no-cache', })).json()
-        this.mwpf_data_3 = await (await fetch('./common/aps2024_surface_code_example_p0.01.json', { cache: 'no-cache', })).json()
+        this.mwpf_data_1 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.04.json', { cache: 'no-cache', })).json()
+        this.mwpf_data_2 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.02.json', { cache: 'no-cache', })).json()
+        this.mwpf_data_3 = await (await fetch('./common/aps2024_triangle_color_code_example_p0.01.json', { cache: 'no-cache', })).json()
         console.log("main component mounted")
         console.log("expected resolution: 4400 * 2000")
     },

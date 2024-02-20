@@ -97,17 +97,6 @@
 <script async>
 import mwpf_3d from './mwpf_3d.vue'
 
-const node_colors = [
-    "#D52C1C",  // red
-    "#44C03F",  // green
-    "#2723F7",  // blue
-    "#F6C231",  // yellow
-    "#4DCCFB",  // light blue
-    "#F17B24",  // orange
-    "#7C1DD8",  // purple
-    "#8C4515",  // brown
-    "#E14CB6",  // pink
-]
 function lerpColors(color1, color2, ratio) {
     let c1 = new THREE.Color(color1)
     let c2 = new THREE.Color(color2)
@@ -115,7 +104,7 @@ function lerpColors(color1, color2, ratio) {
     return "#" + c.getHexString()
 }
 function get_node_color(node_index) {
-    return node_colors[node_index % node_colors.length]
+    return segmented_edge_colors[node_index % segmented_edge_colors.length]
 }
 
 export default {

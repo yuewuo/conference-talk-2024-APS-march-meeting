@@ -3,7 +3,7 @@ import os
 import time
 from alive_progress import alive_bar
 
-NAME = "surface_code_example"
+NAME = "triangle_color_code_example"
 
 FOLDER = f"screenshots_{NAME}"
 common.create_folder(FOLDER)

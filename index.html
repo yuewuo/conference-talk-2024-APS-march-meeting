@@ -75,6 +75,18 @@
         import * as BufferGeometryUtils from './node_modules/three/examples/jsm/utils/BufferGeometryUtils.js'
         window.BufferGeometryUtils = BufferGeometryUtils
 
+        window.segmented_edge_colors = [
+            // "#D52C1C",  // red
+            "#F17B24",  // orange
+            "#44C03F",  // green
+            // "#2723F7",  // blue
+            "#F6C231",  // yellow
+            "#4DCCFB",  // light blue
+            "#7C1DD8",  // purple
+            "#8C4515",  // brown
+            "#E14CB6",  // pink
+        ]
+
         // use default mwpf data for debugging purpose
         let response = await fetch('./common/aps2024_debug_demo.json', {cache: 'no-cache', })
         const mwpf_data_example = await response.json()

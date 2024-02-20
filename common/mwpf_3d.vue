@@ -151,17 +151,6 @@ export function get_edge_material(grown, weight) {
         return edge_materials[idx + 2]
     }
 }
-export let segmented_edge_colors = [
-    // "#D52C1C",  // red
-    "#44C03F",  // green
-    // "#2723F7",  // blue
-    "#F6C231",  // yellow
-    "#4DCCFB",  // light blue
-    "#F17B24",  // orange
-    "#7C1DD8",  // purple
-    "#8C4515",  // brown
-    "#E14CB6",  // pink
-]
 let segmented_untight_opacity = 0.5
 let segmented_tight_opacity = 1
 export const segmented_edge_materials = []

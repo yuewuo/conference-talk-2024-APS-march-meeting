@@ -1,6 +1,7 @@
 <template>
     <Mwpf3d :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3"></Mwpf3d>
-    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3" :content_top="100">
+    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3" :content_top="0"
+        :size="120" :padding_left="400">
     </MwpfTextBox>
 </template>
 
@@ -10,7 +11,7 @@
 import mwpf_3d from './common/mwpf_3d.vue'
 import mwpf_textbox from './common/mwpf_textbox.vue'
 
-const steps = 5
+const steps = 7
 const step_duration = 3
 const duration = (steps + 1) * step_duration
 

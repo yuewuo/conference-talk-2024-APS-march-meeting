@@ -15,7 +15,7 @@ URL = f"http://localhost:8099/index.html?animation={VUE_FILE}"
 FRAME_RATE = 60
 # FRAME_RATE = 5  # for debugging
 START = 0
-DURATION = 3
+DURATION = 6
 
 USE_EXISTING_IMAGES = False
 if 'USE_EXISTING_IMAGES' in os.environ and os.environ["USE_EXISTING_IMAGES"] != "":

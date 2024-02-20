@@ -60,6 +60,7 @@
 
 .node {
     margin-bottom: v-bind(size + 'px');
+    padding-left: v-bind(padding_left + 'px');
 }
 
 .node-name {
@@ -124,6 +125,7 @@ export default {
         "width": { type: Number, default: 2400, },
         "height": { type: Number, default: 2000, },
         "size": { type: Number, default: 180, },
+        "padding_left": { type: Number, default: 0, },
         "animate_duration": { type: Number, default: 0.2, },
         "value_transition": { type: Number, default: 0.8, },  // transition happens in the middle
         "content_top": { type: Number, default: 0, },

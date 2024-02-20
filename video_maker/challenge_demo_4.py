@@ -7,7 +7,7 @@ NAME = f"{VUE_FILE}_4"
 WIDTH = 4400
 HEIGHT = 2000
 URL = f"http://localhost:8099/index.html?animation={VUE_FILE}"
-TIME = 15
+TIME = 21
 
 """
 need a large-enough monitor (at least 4400 * 2000) to take the video, because headless mode doesn't work somehow

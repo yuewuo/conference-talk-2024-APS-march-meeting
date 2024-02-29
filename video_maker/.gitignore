@@ -14,3 +14,4 @@ video_maker/screenshots_*
 __pycache__
 *.mp4
 *.png
+*.mov

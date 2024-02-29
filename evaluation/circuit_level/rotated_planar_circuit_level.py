@@ -3,6 +3,18 @@ from matplotlib.lines import Line2D
 import matplotlib
 import numpy as np
 
+# Font Size
+matplotlib.rcParams['font.size'] = 12
+matplotlib.rcParams['legend.fontsize'] = 'medium'
+matplotlib.rcParams['figure.titlesize'] = 'medium'
+
+# Font Type = Computer Modern Serif (LaTeX)
+matplotlib.rcParams['font.family'] = 'serif'
+matplotlib.rcParams['font.serif'] = 'cmr10'
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['axes.unicode_minus'] = False
+matplotlib.rcParams['axes.formatter.use_mathtext'] = True
+
 
 def read_data(filename):
     ps = []
@@ -46,7 +58,7 @@ for has_hyperion in [False, True]:
     plt.xlim(3e-5, 0.1)
     plt.ylim(3e-7, 1)
     plt.xlabel("physical error rate")
-    plt.xlabel("logical error rate")
+    plt.ylabel("logical error rate")
 
     legends = []
     labels = []

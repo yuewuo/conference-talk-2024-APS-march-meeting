@@ -4,6 +4,18 @@ import matplotlib
 import numpy as np
 from scipy.stats import binom
 
+# Font Size
+matplotlib.rcParams['font.size'] = 12
+matplotlib.rcParams['legend.fontsize'] = 'medium'
+matplotlib.rcParams['figure.titlesize'] = 'medium'
+
+# Font Type = Computer Modern Serif (LaTeX)
+matplotlib.rcParams['font.family'] = 'serif'
+matplotlib.rcParams['font.serif'] = 'cmr10'
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['axes.unicode_minus'] = False
+matplotlib.rcParams['axes.formatter.use_mathtext'] = True
+
 
 def read_data(filename):
     ps = []
@@ -60,7 +72,7 @@ for (has_hyperion, draw_std) in [(False, False), (True, False), (True, True)]:
     plt.xlim(0.09, 0.55)
     plt.ylim(3e-7, 1)
     plt.xlabel("physical error rate")
-    plt.xlabel("logical error rate")
+    plt.ylabel("logical error rate")
 
     legends = []
     labels = []
@@ -84,4 +96,4 @@ for (has_hyperion, draw_std) in [(False, False), (True, False), (True, True)]:
                   "0.1", "0.2", "0.3", "0.4", "0.5"], minor=True)
 
     plt.savefig(
-        f"rotated_planar_circuit_level_{(2 if draw_std else 1) if has_hyperion else 0}.png", dpi=600)
+        f"tailored_xy_inf_bias_code_capacity_{(2 if draw_std else 1) if has_hyperion else 0}.png", dpi=600)

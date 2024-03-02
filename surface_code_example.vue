@@ -8,9 +8,19 @@
     <Mwpf3d :mwpf_data="mwpf_data_3" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="5" :width="width"
         :height="width" :top="top" :left="4400 - width">
     </Mwpf3d>
+    <div class="divider" :style="{ left: 1440 + 'px' }"></div>
+    <div class="divider" :style="{ left: 4400 - 1440 - 10 + 'px' }"></div>
 </template>
 
-<style></style>
+<style>
+.divider {
+    position: absolute;
+    width: 5px;
+    height: v-bind(width + 'px');
+    top: 0;
+    background-color: grey;
+}
+</style>
 
 <script>
 import mwpf_3d from './common/mwpf_3d.vue'
@@ -43,9 +53,9 @@ export default {
     async mounted() {
         this.$emit('duration-is', duration)
         // get decoding graph data
-        this.mwpf_data_1 = await this.get_data('./common/aps2024_surface_code_example_p0.04.json')
+        this.mwpf_data_1 = await this.get_data('./common/aps2024_surface_code_example_p0.01.json')
         this.mwpf_data_2 = await this.get_data('./common/aps2024_surface_code_example_p0.02.json')
-        this.mwpf_data_3 = await this.get_data('./common/aps2024_surface_code_example_p0.01.json')
+        this.mwpf_data_3 = await this.get_data('./common/aps2024_surface_code_example_p0.04.json')
         console.log("main component mounted")
         console.log("expected resolution: 4400 * 2000")
     },

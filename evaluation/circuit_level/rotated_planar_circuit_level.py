@@ -64,13 +64,13 @@ for has_hyperion in [False, True]:
     labels = []
     for d in [3, 5, 7, 9]:
         legends.append(
-            Line2D([0], [0], ls=f"-", c=colors[d], markersize=5, marker="o"))
+            Line2D([0], [0], ls=f"None", c=colors[d], markersize=5, marker="o"))
         labels.append(f"d={d}")
-    legends.append(Line2D([0], [0], ls=f"--", c="black",
+    legends.append(Line2D([0], [0], ls=f"--", c="grey",
                    alpha=1 if not has_hyperion else 0.2))
     labels.append(f"MWPM")
     if has_hyperion:
-        legends.append(Line2D([0], [0], ls=f"-", c="black"))
+        legends.append(Line2D([0], [0], ls=f"-", c="grey"))
         labels.append(f"MWPF")
     plt.legend(legends, labels)
 

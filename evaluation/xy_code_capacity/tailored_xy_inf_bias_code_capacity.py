@@ -77,17 +77,17 @@ for (has_hyperion, draw_std) in [(False, False), (True, False), (True, True)]:
     legends = []
     labels = []
     if draw_std:
-        legends.append(Line2D([0], [0], ls=f":", c="black"))
+        legends.append(Line2D([0], [0], ls=f":", c="grey"))
         labels.append(f"optimal")
     if has_hyperion:
-        legends.append(Line2D([0], [0], ls=f"-", c="black"))
+        legends.append(Line2D([0], [0], ls=f"-", c="grey"))
         labels.append(f"MWPF")
-    legends.append(Line2D([0], [0], ls=f"--", c="black",
+    legends.append(Line2D([0], [0], ls=f"--", c="grey",
                    alpha=1 if not has_hyperion else 0.2))
     labels.append(r"MWPM$^\text{[1]}$")
     for d in [3, 5, 7, 9]:
         legends.append(
-            Line2D([0], [0], ls=f"-", c=colors[d], markersize=5, marker="o"))
+            Line2D([0], [0], ls="None", c=colors[d], markersize=5, marker="o"))
         labels.append(f"d={d}")
     plt.legend(legends, labels)
     plt.xticks([])

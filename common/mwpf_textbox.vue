@@ -118,6 +118,7 @@ export default {
         "animate_duration": { type: Number, default: 0.2, },
         "value_transition": { type: Number, default: 0.8, },  // transition happens in the middle
         "content_top": { type: Number, default: 0, },
+        "use_rational": { type: Boolean, default: false },
         "mwpf_data": {
             type: Object,
             default: mwpf_data_example,
@@ -145,17 +146,29 @@ export default {
             </math>`
         },
         dual_value(node) {
-            return `<math v-pre>
-                <msub>
-                    <mi>y</mi>
-                    <mi>S</mi>
-                </msub>
-                <mo>=</mo>
-                <mfrac>
-                    <mn>${node.dn}</mn>
-                    <mn>${node.dd}</mn>
-                </mfrac>
-            </math>`
+            if (this.use_rational) {
+                return `<math v-pre>
+                    <msub>
+                        <mi>y</mi>
+                        <mi>S</mi>
+                    </msub>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mn>${node.dn}</mn>
+                        <mn>${node.dd}</mn>
+                    </mfrac>
+                </math>`
+            } else {
+                let rounded = Math.round(10 * node.mix_d) / 10
+                return `<math v-pre>
+                    <msub>
+                        <mi>y</mi>
+                        <mi>S</mi>
+                    </msub>
+                    <mo>=</mo>
+                    <mn>${rounded}</mn>
+                </math>`
+            }
         },
     },
     computed: {
@@ -170,6 +183,11 @@ export default {
             const snapshot = mwpf_data.snapshots[snapshot_idx][1]
             const current_snapshot_idx = Math.floor(this.snapshot_idx)
             const current_snapshot = mwpf_data.snapshots[current_snapshot_idx][1]
+            const next_snapshot_idx = current_snapshot_idx + 1
+            let next_snapshot = current_snapshot
+            if (next_snapshot_idx < mwpf_data.snapshots.length) {
+                next_snapshot = mwpf_data.snapshots[next_snapshot_idx][1]
+            }
             const round_snapshot_idx = Math.round(this.snapshot_idx)
             const round_snapshot = mwpf_data.snapshots[round_snapshot_idx][1]
             const frac_index = this.snapshot_idx - Math.floor(this.snapshot_idx)
@@ -193,14 +211,22 @@ export default {
                     }
                 }
                 let value_opacity = 1
-                if (current_node.d != node.d) {
-                    const frac_half = frac_index < 0.5 ? frac_index : 1 - frac_index
-                    if (frac_half >= 0.5 - this.value_transition / 2) {
-                        value_opacity = (0.5 - frac_half) / (this.value_transition / 2)
+                if (this.use_rational) {
+                    if (current_node.d != node.d) {
+                        const frac_half = frac_index < 0.5 ? frac_index : 1 - frac_index
+                        if (frac_half >= 0.5 - this.value_transition / 2) {
+                            value_opacity = (0.5 - frac_half) / (this.value_transition / 2)
+                        }
                     }
+                }
+                let mix_d = current_node.d
+                if (node_index < next_snapshot.dual_nodes.length) {
+                    const next_node = next_snapshot.dual_nodes[node_index]
+                    mix_d = current_node.d * (1 - frac_index) + next_node.d * frac_index
                 }
                 const modified_node = {
                     ...node,
+                    mix_d,
                     opacity,
                     value_opacity,
                     color,

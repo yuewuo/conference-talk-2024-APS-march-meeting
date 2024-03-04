@@ -1,6 +1,6 @@
 <template>
     <Mwpf3d :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3"></Mwpf3d>
-    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3" :content_top="0"
+    <MwpfTextBox :mwpf_data="mwpf_data" :snapshot_idx="snapshot_idx_interpolated" :camera_scale="3" :content_top="-40"
         :size="120" :padding_left="400">
     </MwpfTextBox>
 </template>

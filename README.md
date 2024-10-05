@@ -15,3 +15,7 @@ Open the browser and visit [http://localhost:8099/index.html?animation=debug_dem
 All the files under the root directory cal be loaded as an animation.
 By default the animation works in a demo mode that plays the animation over and over again.
 
+
+If you see exceptions like `This version of ChromeDriver only supports Chrome version 121`, run `pip install chromedriver_py --upgrade` to get the latest chromedriver.
+If you do not have the latest chrome browser, then install a specific version using `pip install chromedriver-py==125.0.6422.141`.
+You can find a list of available versions in https://pypi.org/project/chromedriver-py/#history.
